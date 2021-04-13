@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:scribl"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <!-- need to add a menu bar -->
     <Grid>
-        
+        <Canvas x:Name="mainCanvas" />
     </Grid>
+    
 </Window>
