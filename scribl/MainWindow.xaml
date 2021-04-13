@@ -8,7 +8,13 @@
         Title="MainWindow" Height="450" Width="800">
     <!-- need to add a menu bar -->
     <Grid>
-        <Canvas x:Name="mainCanvas" />
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="25" />
+        </Grid.RowDefinitions>
+        <!-- make canvas nice, do research -->
+        <Canvas x:Name="mainCanvas" Grid.Row="0" VerticalAlignment="Stretch"/>
+        <TextBox x:Name="commandLine" Grid.Row="1" VerticalAlignment="Stretch" Text="hey"/>
     </Grid>
     
 </Window>
