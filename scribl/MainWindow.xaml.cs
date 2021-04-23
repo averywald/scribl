@@ -26,9 +26,8 @@ namespace scribl
         {
             InitializeComponent();
 
-            // example textbox
-            // TextBox test = new TextBox();
-            TextBlock test = new TextBlock();
+            // custom textbox for testing
+            Blurb test = new Blurb();
             test.Text = "hello, i am a text box";
             test.MouseMove += OnMouseMove;
 

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Style TargetType="scribl:Blurb" BasedOn="{StaticResource {x:Type TextBox}}">
+  <Setter Property="Template">
+    <Setter.Value>
+      <ControlTemplate TargetType="scribl:Blurb">
+
+        <Border BorderThickness="{Binding Path=BorderThickness, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}"
+                BorderBrush="{Binding Path=BorderBrush, RelativeSource={RelativeSource TemplatedParent}, Mode=OneWay}">
+          <Grid>
+            <ScrollViewer Name="PART_ContentHost" Margin="3"/>
+            <TextBlock Name="watermarkText"
+                  Text="{TemplateBinding Watermark}"
+                  FontStyle="Italic"
+                  VerticalAlignment="Center" 
+                  Margin="5,0,0,0"
+                  FontWeight="Bold"
+                  Foreground="Gray"/>
+          </Grid>
+        </Border>
+
+        <ControlTemplate.Triggers>
+          <MultiTrigger>
+            <MultiTrigger.Conditions>
+              <Condition Property="IsFocused" Value="True"/>
+            </MultiTrigger.Conditions>
+            <Setter Property="Visibility" Value="Collapsed" TargetName="watermarkText" />
+          </MultiTrigger>
+
+          <MultiTrigger>
+            <MultiTrigger.Conditions>
+              <!--<Condition Property="RemoveWatermark" Value="True"/>-->
+              <Condition Property="IsFocused" Value="False"/>
+            </MultiTrigger.Conditions>
+            <!--<Setter Property="Visibility" Value="Collapsed" TargetName="watermarkText" />-->
+          </MultiTrigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </Setter.Value>
+  </Setter>
+</Style>
