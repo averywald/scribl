@@ -10,10 +10,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="25" />
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <!-- make canvas nice, do research -->
-        <Canvas x:Name="mainCanvas" Grid.Row="0" VerticalAlignment="Stretch"/>
+        <Canvas x:Name="mainCanvas" Grid.Row="0" VerticalAlignment="Stretch" Background="Transparent"/>
         <TextBox x:Name="commandLine" Grid.Row="1" VerticalAlignment="Stretch" Text="hey"/>
     </Grid>
     

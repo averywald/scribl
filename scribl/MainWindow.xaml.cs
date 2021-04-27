@@ -20,36 +20,21 @@ namespace scribl
     /// </summary>
     public partial class MainWindow : Window
     {
-        Nullable<Point> dragStart = null; // will hold coordinates on drag event
-
         public MainWindow()
         {
             InitializeComponent();
 
-            // custom textbox for testing
-            Blurb test = new Blurb();
-            test.Text = "hello, i am a text box";
-            test.MouseMove += OnMouseMove;
+            mainCanvas.MouseDown += MainCanvas_GotFocus;
 
+            // custom textbox for testing
+            Blurb test = new Blurb(this);
             mainCanvas.Children.Add(test);
         }
 
-        void OnMouseMove(object sender, MouseEventArgs args)
+        private void MainCanvas_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (args.Source is TextBlock tb)
-            {
-                if (args.LeftButton == MouseButtonState.Pressed)
-                {
-                    Point p = args.GetPosition(mainCanvas);
-                    Canvas.SetLeft(tb, p.X - tb.ActualWidth / 2);
-                    Canvas.SetTop(tb, p.Y - tb.ActualHeight / 2);
-                    tb.CaptureMouse();
-                }
-                else
-                {
-                    tb.ReleaseMouseCapture();
-                }
-            }
+            Console.WriteLine(sender.GetType());
+            commandLine.Text = "click?";
         }
     }
 }
