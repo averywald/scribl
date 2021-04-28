@@ -45,7 +45,14 @@ namespace scribl
 
             this.MouseMove += Blurb_MouseMove;
 
+            this.MouseDoubleClick += Blurb_MouseDoubleClick;
+
             this.textBlock.Text = "fake text for test";
+        }
+
+        private void Blurb_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // should convert textblock value to flowdocument and enable the richtexteditor
         }
 
         private void Blurb_MouseMove(object sender, MouseEventArgs args)

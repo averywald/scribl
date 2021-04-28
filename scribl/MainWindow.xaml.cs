@@ -20,21 +20,32 @@ namespace scribl
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<Blurb> blurbs = new List<Blurb>();
+
         public MainWindow()
         {
             InitializeComponent();
 
-            mainCanvas.MouseDown += MainCanvas_GotFocus;
+            mainCanvas.MouseDown += NewBlurb;
 
             // custom textbox for testing
             Blurb test = new Blurb(this);
+            blurbs.Add(test);
             mainCanvas.Children.Add(test);
         }
 
-        private void MainCanvas_GotFocus(object sender, RoutedEventArgs e)
+        private void NewBlurb(object sender, MouseButtonEventArgs args)
         {
-            Console.WriteLine(sender.GetType());
-            commandLine.Text = "click?";
+            if (args.Source is Canvas)
+            {
+                Blurb b = new Blurb(this); // should pass click coords to add the blurb there
+                blurbs.Add(b); // add to object collection
+                mainCanvas.Children.Add(b); // add to UI
+
+                // place in UI at position of click
+                Canvas.SetLeft(b, args.GetPosition(this).X);
+                Canvas.SetTop(b, args.GetPosition(this).Y);
+            }
         }
     }
 }
