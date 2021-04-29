@@ -25,7 +25,18 @@ namespace scribl
     /// </summary>
     public partial class Blurb : UserControl
     {
-        public Point Position; // handle
+        public bool IsEditing
+        {
+            get => this.isEditing;
+            set
+            {
+                this.isEditing = value;
+
+                // TODO: eliminate side-effects ??
+                if (value == true) this.EnableEditMode();
+                else this.DisableEditMode();
+            }
+        }
         public Dictionary<string, double> Dimensions // should be updated when resized
         {
             get => new Dictionary<string, double>
@@ -34,6 +45,9 @@ namespace scribl
                 { "height", this.Height }
             };
         }
+        public Point Position; // handle
+
+        private bool isEditing;
         private FlowDocument document;
         private MainWindow parent;
 
@@ -43,16 +57,23 @@ namespace scribl
 
             InitializeComponent(); // actually create the component in-app
 
-            this.MouseMove += Blurb_MouseMove;
+            this.document = new FlowDocument(); // initialize rich text editor doc
 
-            this.MouseDoubleClick += Blurb_MouseDoubleClick;
+            this.MouseMove += Blurb_MouseMove; // attach the drag event function
+            this.MouseDoubleClick += Blurb_MouseDoubleClick; // attach the edit text mode function
+            this.LostFocus += Blurb_LostFocus;
 
             this.textBlock.Text = "fake text for test";
         }
 
+        private void Blurb_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (isEditing) this.DisableEditMode();
+        }
+
         private void Blurb_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // should convert textblock value to flowdocument and enable the richtexteditor
+            if (!isEditing) this.EnableEditMode();
         }
 
         private void Blurb_MouseMove(object sender, MouseEventArgs args)
@@ -78,6 +99,22 @@ namespace scribl
             }
         }
 
-        // more, definitely
+        private void DisableEditMode()
+        {
+            this.isEditing = false; // deactivate editor mode
+
+            // TODO: process flow document, spit into textBlock
+
+            textBox.Visibility = Visibility.Hidden; // hide rich text editor
+            textBlock.Visibility = Visibility.Visible; // show textblock plaintext
+        }
+
+        private void EnableEditMode()
+        {
+            this.isEditing = true; // set the blurb's mode to editing
+            textBlock.Visibility = Visibility.Hidden; // hide the textblock
+            string text = textBlock.Text; // save the content of the box - TODO: should automatically update flowdoc
+            textBox.Visibility = Visibility.Visible; // show rich text editor
+        }
     }
 }
