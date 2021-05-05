@@ -1,5 +1,6 @@
 ﻿<Window x:Class="scribl.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:controls="clr-namespace:scribl"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,7 +14,7 @@
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <!-- make canvas nice, do research -->
-        <Canvas x:Name="mainCanvas" Grid.Row="0" VerticalAlignment="Stretch" Background="Transparent"/>
+        <controls:Document></controls:Document>
         <TextBox x:Name="commandLine" Grid.Row="1" VerticalAlignment="Stretch" Text="hey"/>
     </Grid>
     
