@@ -38,7 +38,7 @@ namespace scribl
         public event PropertyChangedEventHandler PropertyChanged; // handler to notify listeners of active state changes
         private int id;
         private bool isActive = true;
-        private bool isEditing = true; // initally true - when a blurb is created is has focus
+        private bool isEditing = true; // initally true - when a blurb is created it has focus
         private FlowDocument document;
         private Document parent;
         #endregion
@@ -60,7 +60,7 @@ namespace scribl
         {
             if (this.PropertyChanged != null)
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(blurbId.ToString()));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(blurbId.ToString()));
             }
         }
 

@@ -41,20 +41,13 @@ namespace scribl
             InitializeComponent();
 
             mainCanvas.MouseLeftButtonDown += MainCanvas_MouseLeftButtonDown; // attach event handler
-
-            this.Blurbs.CollectionChanged += Blurb_CollectionChanged;
-        }
-
-        private void Blurb_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            Console.WriteLine(e);
         }
 
         private void MainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs args)
         {
             if (args.Source is Canvas)
             {
-                if (args.ClickCount == 2) this.NewBlurb(sender, args); // double click - create new blurb
+                if (args.ClickCount == 2) this.AddBlurb(sender, args); // double click - create new blurb
 
                 else if (args.ClickCount == 1) // single click
                 {
@@ -66,16 +59,7 @@ namespace scribl
             }
         }
 
-        private int GetBlurbInEditMode()
-        {
-            foreach (Blurb b in this.Blurbs)
-            {
-                if (b.IsActive) return this.Blurbs.IndexOf(b); // return index of the blurb in edit mode
-            }
-            return -1; // if none found
-        }
-
-        private void NewBlurb(object sender, MouseButtonEventArgs args)
+        private void AddBlurb(object sender, MouseButtonEventArgs args)
         {
             Blurb b = new Blurb(this, this.Blurbs.Count); // should pass click coords to add the blurb there
             Blurbs.Add(b); // add to object collection
@@ -84,6 +68,15 @@ namespace scribl
             // place in UI at position of click
             Canvas.SetLeft(b, args.GetPosition(this).X);
             Canvas.SetTop(b, args.GetPosition(this).Y);
+        }
+
+        private int GetActiveBlurb()
+        {
+            foreach (Blurb b in this.Blurbs)
+            {
+                if (b.IsActive) return this.Blurbs.IndexOf(b); // return index of the blurb in edit mode
+            }
+            return -1; // if none found
         }
     }
 }
