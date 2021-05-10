@@ -45,23 +45,36 @@ namespace scribl
 
         private void MainCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs args)
         {
-            if (args.Source is Canvas)
+            if (args.Source is Canvas && args.ClickCount == 2)
             {
-                if (args.ClickCount == 2) this.AddBlurb(sender, args); // double click - create new blurb
+                this.AddBlurb(sender, args); // create a new blurb
+            }
 
-                else if (args.ClickCount == 1) // single click
+            if (args.Source is Canvas && args.ClickCount == 1) // single click
+            {
+                foreach (Blurb b in this.Blurbs)
                 {
-                    foreach (Blurb b in this.Blurbs)
-                    {
-                        b.DisableEditMode();
-                    }
+                    b.IsActive = false; // disable all non-clicked blurbs
+                }
+            }
+        }
+
+        private void Blurb_ActiveStateChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Blurb x = sender as Blurb;
+            foreach (Blurb b in this.Blurbs)
+            {
+                if (x != b)
+                {
+                    b.IsActive = false;
                 }
             }
         }
 
         private void AddBlurb(object sender, MouseButtonEventArgs args)
         {
-            Blurb b = new Blurb(this, this.Blurbs.Count); // should pass click coords to add the blurb there
+            Blurb b = new Blurb(this); // should pass click coords to add the blurb there
+            b.PropertyChanged += Blurb_ActiveStateChanged; // subscribe to activate state change listener
             Blurbs.Add(b); // add to object collection
             mainCanvas.Children.Add(b); // add to UI
 
@@ -72,10 +85,7 @@ namespace scribl
 
         private int GetActiveBlurb()
         {
-            foreach (Blurb b in this.Blurbs)
-            {
-                if (b.IsActive) return this.Blurbs.IndexOf(b); // return index of the blurb in edit mode
-            }
+            
             return -1; // if none found
         }
     }

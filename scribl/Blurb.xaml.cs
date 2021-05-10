@@ -25,10 +25,16 @@ namespace scribl
             get => this.isActive;
             set
             {
-                if (this.isActive != value) // when isActive state changes
+                this.isActive = value; // assign new value
+                if (value == true) // when the blurb becomes active
                 {
-                    this.isActive = value;
-                    this.NotifyActiveStateChanged(this.id); // notify listeners
+                    this.NotifyActiveStateChanged(); // notify listener in document parent
+                    this.border.BorderBrush = Brushes.Aqua; // highlight border
+                }
+                if (value == false)
+                {
+                    this.DisableEditMode();
+                    this.border.BorderBrush = Brushes.Gray; // un-highlight border in UI
                 }
             }
         }
@@ -36,42 +42,49 @@ namespace scribl
 
         #region Attributes
         public event PropertyChangedEventHandler PropertyChanged; // handler to notify listeners of active state changes
-        private int id;
-        private bool isActive = true;
+        private bool isActive = true; // has focus when created
         private bool isEditing = true; // initally true - when a blurb is created it has focus
         private FlowDocument document;
         private Document parent;
         #endregion
 
-        public Blurb(Document parent, int id) // constructor
+        public Blurb(Document parent) // constructor
         {
             this.parent = parent; // save parent ref for relative positioning?
 
             InitializeComponent(); // actually create the component in-app
 
             this.document = new FlowDocument(); // initialize rich text editor doc
+            this.textBox.Document = this.document; // attach flowdoc to richtextbox
 
             this.MouseLeftButtonDown += Blurb_MouseLeftButtonDown;
             this.MouseMove += Blurb_MouseMove; // attach the drag event function
             this.MouseDoubleClick += Blurb_MouseDoubleClick; // attach the edit text mode function
         }
 
-        public void NotifyActiveStateChanged(int blurbId)
+        public void NotifyActiveStateChanged()
         {
             if (this.PropertyChanged != null)
             {
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(blurbId.ToString()));
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(this.ToString())); // invoke event for the parent document
             }
         }
 
         #region Event Handlers
 
-        private void Blurb_MouseLeftButtonDown(object sender, MouseButtonEventArgs args)
+        private void Blurb_MouseLeftButtonDown(object sender, MouseButtonEventArgs args) 
         {
             if (args.Source is Blurb b && this.isActive == false)
             {
-                this.IsActive = true;
-                this.border.BorderBrush = Brushes.Red; // highlight border in UI
+                if (args.ClickCount == 1)
+                {
+                    this.IsActive = true;
+                }
+                if (args.ClickCount == 2)
+                {
+                    this.IsActive = true;
+                    this.EnableEditMode();
+                }
             }
         }
 
@@ -105,22 +118,17 @@ namespace scribl
 
         #endregion
 
-        public void DisableEditMode()
+        private void DisableEditMode()
         {
             this.isEditing = false; // deactivate editor mode
-            this.IsActive = false;
-            this.border.BorderBrush = Brushes.Gray; // un-highlight border in UI
-
             // TODO: process flow document, spit into textBlock
-
             textBox.Visibility = Visibility.Hidden; // hide rich text editor
             textBlock.Visibility = Visibility.Visible; // show textblock plaintext
         }
 
-        public void EnableEditMode()
+        private void EnableEditMode()
         {
             this.isEditing = true; // set the blurb's mode to editing
-            this.IsActive = false;
             textBlock.Visibility = Visibility.Hidden; // hide the textblock
             string text = textBlock.Text; // save the content of the box - TODO: should automatically update flowdoc
             textBox.Visibility = Visibility.Visible; // show rich text editor
