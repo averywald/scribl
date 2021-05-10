@@ -10,9 +10,7 @@
              Focusable="True">
     <Grid Width="150" Height="100">
         <Border Name="border"
-                BorderBrush="Black"
                 BorderThickness="2"/>
-        <TextBlock Name="textBlock" Visibility="Hidden" Margin="5"/>
         <RichTextBox Name="textBox" Margin="5"/>
     </Grid>
 </UserControl>

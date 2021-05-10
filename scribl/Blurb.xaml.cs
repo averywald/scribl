@@ -42,20 +42,23 @@ namespace scribl
 
         #region Attributes
         public event PropertyChangedEventHandler PropertyChanged; // handler to notify listeners of active state changes
-        private bool isActive = true; // has focus when created
-        private bool isEditing = true; // initally true - when a blurb is created it has focus
+        private bool isActive;
+        private bool isEditing;
         private FlowDocument document;
         private Document parent;
         #endregion
 
         public Blurb(Document parent) // constructor
         {
-            this.parent = parent; // save parent ref for relative positioning?
-
             InitializeComponent(); // actually create the component in-app
 
+            this.parent = parent; // save parent ref for relative positioning?
+
+            // initally true - when a blurb is created it has focus
+            this.IsActive = true;
+            this.EnableEditMode();
+
             this.document = new FlowDocument(); // initialize rich text editor doc
-            this.textBox.Document = this.document; // attach flowdoc to richtextbox
 
             this.MouseLeftButtonDown += Blurb_MouseLeftButtonDown;
             this.MouseMove += Blurb_MouseMove; // attach the drag event function
@@ -76,15 +79,7 @@ namespace scribl
         {
             if (args.Source is Blurb b && this.isActive == false)
             {
-                if (args.ClickCount == 1)
-                {
-                    this.IsActive = true;
-                }
-                if (args.ClickCount == 2)
-                {
-                    this.IsActive = true;
-                    this.EnableEditMode();
-                }
+                this.IsActive = true;
             }
         }
 
@@ -121,17 +116,27 @@ namespace scribl
         private void DisableEditMode()
         {
             this.isEditing = false; // deactivate editor mode
-            // TODO: process flow document, spit into textBlock
-            textBox.Visibility = Visibility.Hidden; // hide rich text editor
-            textBlock.Visibility = Visibility.Visible; // show textblock plaintext
+            
+            //textBox.Visibility = Visibility.Hidden; // hide rich text editor
+            this.document = textBox.Document;
+            this.textBox.Focusable = false;
+            this.textBox.IsReadOnly = true;
+            //documentViewer.Document = this.document;
+            //documentViewer.Visibility = Visibility.Visible; // show textblock plaintext
         }
 
         private void EnableEditMode()
         {
+            if (this.document != null)
+            {
+                this.textBox.Document = this.document;
+            }
             this.isEditing = true; // set the blurb's mode to editing
-            textBlock.Visibility = Visibility.Hidden; // hide the textblock
-            string text = textBlock.Text; // save the content of the box - TODO: should automatically update flowdoc
-            textBox.Visibility = Visibility.Visible; // show rich text editor
+            this.textBox.Focusable = true;
+            this.textBox.Focus();
+            this.textBox.IsReadOnly = false;
+            //documentViewer.Visibility = Visibility.Hidden; // hide the textblock
+            //textBox.Visibility = Visibility.Visible; // show rich text editor
         }
     }
 }
